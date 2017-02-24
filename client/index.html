@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Store</title>
+	<script src="angular/angular.js" charset="utf-8"></script>
+    <script src="angular-route/angular-route.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    	var app = angular.module('app', ['ngRoute']);
+		app.config(function($routeProvider){
+    		$routeProvider
+    		.when("/", {
+    			templateUrl: "partials/Dashboard.html",
+    			controller: "CustomerController"
+    		})
+    		.when("/new_question", {
+    			templateUrl: "partials/newquestion.html",
+    			controller: "QuestionController"
+    		})
+    		.when("/play", {
+    			templateUrl: "partials/questions.html",
+    			controller: "QuestionController"
+    		})
+    		.otherwise({
+    			redirectTo: "/"
+    		})
+    	})
+    	app.factory("CustomerFactory", function($http){
+    		factory = {};
+    		scores = [];
+    		named = "";
+
+    		factory.index = function(callback){
+    			$http.get("/scores").then(function(data){
+					if (typeof(callback) == 'function'){
+		  				console.log(data, "customer factory data")
+		  				callback(data.data);
+					}
+				})
+    		}
+        		
+    		factory.getname = function(callback){
+    			callback(named);
+    		}
+			
+			factory.setname = function(name){
+    			named = name;
+    			console.log(named)
+    		}
+    		factory.logout = function(callback){
+    			named = "";
+    			callback(named);
+    		}
+
+    		return factory 
+    	})
+
+    	app.controller("CustomerController", function($scope, CustomerFactory, $location){
+    		$scope.scores = [];
+    		$scope.name = "";
+    		
+    		var index = function(){
+    			CustomerFactory.index(function(data){$scope.scores = data})
+    			
+    			if($scope.name == ""){
+	    			CustomerFactory.getname(function(data){
+	    				$scope.name = data
+	    				if (data == ""){
+	    					$scope.name = prompt("please enter your name")
+	    					console.log($scope.name)
+
+	    					CustomerFactory.setname($scope.name)
+	    				}
+	    			})
+	    		}
+    		}
+    		index()
+
+    		$scope.addCustomer = function(){
+    			console.log($scope.newCustomer)
+    			CustomerFactory.add($scope.newCustomer, function(data){
+    				$scope.newCustomer = {};
+    				index()
+    			})
+    		}
+
+    		$scope.logout = function(){
+    			CustomerFactory.logout(function(data){
+    				$scope.name = "";
+    				index()
+    			})
+    		}
+			$scope.playgame = function(){
+				$location.url("/play")
+			}
+    	})
+
+
+
+    	app.factory("QuestionFactory", function($http){
+			factory = {};
+    	    
+    	    factory.index = function(callback){
+    	    	$http.get("/questions").then(function(data){
+    	    		if (typeof(callback) == 'function'){
+		  				console.log(data, "customer factory data")
+		  				callback(data.data);
+					}
+    	    	})
+    	    }
+
+    	    factory.add = function(question, callback){
+    			$http.post("/addquestion", question).then(function(data){
+					if (typeof(callback) == 'function'){
+		  				console.log(data.data, "products factory data")
+		 				callback(data.data);
+			 		}
+    			})
+    		}
+
+
+    		factory.addscore = function(newscore, callback){
+    			$http.post("/addscore", newscore).then(function(data){
+    				if (typeof(callback) == 'function'){
+		  				console.log(data.data, "score factory data")
+		 				callback(data.data);
+			 		}
+    			})
+    		}
+    		return factory 
+    	})
+
+    	app.controller("QuestionController", function($scope, QuestionFactory, $location, CustomerFactory){
+    		$scope.questions = [];
+    		$scope.name = "";
+
+    		var index = function(){
+				QuestionFactory.index(function(data){
+
+					$scope.questions = data;
+				});
+				if($scope.name == ""){
+	    			CustomerFactory.getname(function(data){
+	    				$scope.name = data
+	    				if (data == ""){
+	    					$scope.name = prompt("please enter your name")
+	    					console.log($scope.name)
+	    					CustomerFactory.setname($scope.name)
+	    					$location.url("/")
+
+	    				}
+	    			})
+	    		}
+    		}
+    		index();
+
+			function shuffle(array) {
+			  var currentIndex = array.length, temporaryValue, randomIndex;
+
+			  // While there remain elements to shuffle...
+			  while (0 !== currentIndex) {
+
+			    // Pick a remaining element...
+			    randomIndex = Math.floor(Math.random() * currentIndex);
+			    currentIndex -= 1;
+
+			    // And swap it with the current element.
+			    temporaryValue = array[currentIndex];
+			    array[currentIndex] = array[randomIndex];
+			    array[randomIndex] = temporaryValue;
+			  }
+
+			  return array;
+			}
+
+
+    		$scope.addQuestion = function(){
+    			QuestionFactory.add($scope.newQuestion, function(data){
+    				$scope.newQuestion = {};
+    				// $location.url("/")
+    			})
+    		}
+
+
+    		$scope.submitQuiz = function(){
+    			console.log($scope.answer, "Dad")
+    			var numberright = 5;
+
+				if ($scope.answer.one == "wrong"){
+					numberright--;
+    			}
+    			if ($scope.answer.two == "wrong"){
+    				numberright--;
+
+    			}
+    			if ($scope.answer.three == "wrong"){
+    				numberright--;
+
+    			}
+    			if ($scope.answer.four == "wrong"){
+    				numberright--;
+
+    			}
+    			if ($scope.answer.five == "wrong"){
+ 					numberright--;
+    			}
+
+    			var per = Math.round((numberright/5)*100)
+    			var newscore = {name: $scope.name, score: numberright, percentage: per}
+    			
+    			QuestionFactory.addscore(newscore, function(data){
+    				console.log(data.data)
+    			})
+    			$location.url("/")
+    			
+    		
+    		}
+
+    		$scope.logout = function(){
+    			CustomerFactory.logout(function(data){
+    				$scope.name = "";
+    				index()
+    			})
+    		}
+    		$scope.cancelquestion = function(){
+    			$location.url("/")
+    		}
+    	})
+
+    </script>
+</head>
+<body ng-app="app">
+
+	<div ng-view="">
+	</div>
+
+</body>
+</html>

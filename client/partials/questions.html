@@ -1,0 +1,40 @@
+
+
+<p>hello {{name}}</p>
+<p>choose and answer and submit the test once done. Good Luck!</p>
+
+<form>
+	<fieldset>
+		<p>1 {{questions[0].question}}</p>
+		<input type="radio" name="1" value="right" ng-model="answer.one" required> {{questions[0].correct}}<br>
+  		<input type="radio" name="1" value="wrong" ng-model="answer.one" required> {{questions[0].wrong1}}<br>
+  		<input type="radio" name="1" value="wrong" ng-model="answer.one" required> {{questions[0].wrong2}}
+	</fieldset>
+	<fieldset>
+		<p>2 {{questions[1].question}}</p>
+		<input type="radio" name="2" value="wrong" ng-model="answer.two" required> {{questions[1].wrong1}}<br>
+  		<input type="radio" name="2" value="right" ng-model="answer.two" required> {{questions[1].correct}}<br>
+  		<input type="radio" name="2" value="wrong" ng-model="answer.two" required> {{questions[1].wrong2}}
+	</fieldset>
+	<fieldset>
+		<p>3 {{questions[2].question}}</p>
+		<input type="radio" name="3" value="wrong" ng-model="answer.three" required> {{questions[2].wrong2}}<br>
+  		<input type="radio" name="3" value="wrong" ng-model="answer.three" required> {{questions[2].wrong1}}<br>
+  		<input type="radio" name="3" value="right" ng-model="answer.three" required> {{questions[2].correct}}
+	</fieldset>
+	<fieldset>
+		<p>4 {{questions[3].question}}</p>
+		<input type="radio" name="4" value="right" ng-model="answer.four" required> {{questions[3].correct}}<br>
+  		<input type="radio" name="4" value="wrong" ng-model="answer.four" required> {{questions[3].wrong1}}<br>
+  		<input type="radio" name="4" value="wrong" ng-model="answer.four" required> {{questions[3].wrong2}}
+	</fieldset>
+	<fieldset>
+		<p>5 {{questions[4].question}}</p>
+		<input type="radio" name="5" value="wrong" ng-model="answer.five" required> {{questions[4].wrong1}}<br>
+  		<input type="radio" name="5" value="right" ng-model="answer.five" required> {{questions[4].correct}}<br>
+  		<input type="radio" name="5" value="wrong" ng-model="answer.five" required> {{questions[4].wrong2}}
+	</fieldset>
+	<input type="submit" ng-click="submitQuiz()" value="Submit">
+	<input type="button" ng-click="cancelquestion()" value="cancel">
+
+</form>

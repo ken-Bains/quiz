@@ -1,0 +1,27 @@
+
+
+<a href="#!/" title="">Home</a> | <a href="#!/new_question">Add a question</a> | <a href="#!/" ng-click="logout()">logout</a> 
+
+
+<p>{{name}}</p>
+
+<input type="button" value="PLAY!" ng-click="playgame()">
+
+<hr>
+<input type="text" ng-model="quizSearch" placeholder="filter">
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Score</th>
+			<th>percentage</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="score in scores | filter:quizSearch">
+			<td>{{score.name}}</td>
+			<td>{{score.score}}/5</td>
+			<td>{{score.percentage}}%</td>
+		</tr>
+	</tbody>
+</table>

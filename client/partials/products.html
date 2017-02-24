@@ -1,0 +1,33 @@
+<div>
+	<form>
+		<input type="text" ng-model="productSearch" placeholder="filter">
+		<input type="button" ng-click="searchFilter()" value="filter">
+	</form>
+	<h3>Add a New Product</h3>
+	<form>
+		Name: 	<input type="text" ng-model="newProduct.name">
+		Img: 	<input type="text" ng-model="newProduct.image">
+		Description: 	<input type="text" ng-model="newProduct.description">
+		Quantity: <input type="text" ng-model="newProduct.quantity">
+		<input type="submit" ng-click="addProduct()" value="create">
+
+	</form>
+</div>
+<div>
+<table>
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Product Name</th>
+			<th>Quantity</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="product in products | filter:filters">
+			<td><img src="{{product.image}}" alt="" height="40px" width="40px"></td>
+			<td>{{product.name}}</td>
+			<td>{{product.quantity}} left</td>
+		</tr>
+	</tbody>
+</table>
+</div>

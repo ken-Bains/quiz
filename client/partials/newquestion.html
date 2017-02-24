@@ -1,0 +1,14 @@
+	<a href="#!/" title="">Home</a> | <a href="#!/new_question">Add a question</a> | <a href="#!/" ng-click="logout()">logout</a> 
+
+
+	<h2>NEW QUESTION</h2>
+	<form>
+		Question: 	<input type="text" ng-model="newQuestion.question" required><br>
+		Correct Answer: 	<input type="text" ng-model="newQuestion.correct" required><br>
+		Fake Answer 1: 	<input type="text" ng-model="newQuestion.wrong1" required><br>
+		Fake Anser 2: <input type="text" ng-model="newQuestion.wrong2" required><br>
+		<input type="submit" ng-click="addQuestion()" value="Add Question">
+		<input type="button" ng-click="cancelquestion()" value="cancel">
+
+	</form>
+
